@@ -1,3 +1,4 @@
+import { IVitalData } from './../../../../gorl-vitals/shared/vital';
 import alt from 'alt-server';
 import * as Athena from '@AthenaServer/api';
 
@@ -167,14 +168,24 @@ async function exampleItems() {
         result: { dbName: 'potato-with-cheese', quantity: 1 },
     });
 
+    const vitalData: IVitalData = {
+        hunger: 5.0,
+        thirst: 1.0,
+        pee: 0.1,
+        shit: 5.0,
+    };
+
     Athena.systems.inventory.factory.upsertAsync({
         dbName: 'burger',
-        data: { health: 5 },
+        data: {
+            health: 5,
+            vital: vitalData,
+        },
         icon: 'burger',
         name: 'Burger',
         maxStack: 8,
         weight: 25,
-        behavior: { canDrop: true, canStack: true, canTrade: true, destroyOnDrop: false, isToolbar: true },
+        behavior: { canDrop: true, canStack: false, canTrade: true, destroyOnDrop: false, isToolbar: true },
         consumableEventToCall: 'edible',
     });
 

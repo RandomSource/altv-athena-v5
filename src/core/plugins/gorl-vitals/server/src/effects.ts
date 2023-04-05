@@ -35,7 +35,7 @@ export class InternalFunctions {
             Athena.player.emit.sound3D(player, item.data.sound, player);
         }
 
-        if (vitalsName === VITAL_NAMES.FOOD) {
+        if (vitalsName === VITAL_NAMES.THIRST) {
             const attachedObject: IAttachable = {
                 model: 'prop_cs_burger_01',
                 bone: 71,
@@ -52,10 +52,10 @@ export class InternalFunctions {
                 6000,
             );
 
-            VitalsSystem.adjustVital(player, VITAL_NAMES.FOOD, item.data.amount);
+            VitalsSystem.adjustVital(player, VITAL_NAMES.HUNGER, item.data.amount);
         }
 
-        if (vitalsName === VITAL_NAMES.WATER) {
+        if (vitalsName === VITAL_NAMES.THIRST) {
             const attachedObject: IAttachable = {
                 model: 'prop_beer_bottle',
                 bone: 71,
@@ -72,7 +72,7 @@ export class InternalFunctions {
                 5000,
             );
 
-            VitalsSystem.adjustVital(player, VITAL_NAMES.WATER, item.data.amount);
+            VitalsSystem.adjustVital(player, VITAL_NAMES.THIRST, item.data.amount);
         }
         type === 'toolbar'
             ? await Athena.player.toolbar.sub(player, { dbName: item.dbName, quantity: 1, data: item.data })
@@ -88,14 +88,14 @@ export class VitalsEffects {
         Athena.systems.inventory.effects.add(
             EFFECT.EFFECT_FOOD,
             (player: alt.Player, slot: number, type: 'inventory' | 'toolbar') => {
-                InternalFunctions.handleVitalsChange(player, slot, type, VITAL_NAMES.FOOD);
+                InternalFunctions.handleVitalsChange(player, slot, type, VITAL_NAMES.HUNGER);
             },
         );
 
         Athena.systems.inventory.effects.add(
             EFFECT.EFFECT_WATER,
             (player: alt.Player, slot: number, type: 'inventory' | 'toolbar') => {
-                InternalFunctions.handleVitalsChange(player, slot, type, VITAL_NAMES.WATER);
+                InternalFunctions.handleVitalsChange(player, slot, type, VITAL_NAMES.THIRST);
             },
         );
     }

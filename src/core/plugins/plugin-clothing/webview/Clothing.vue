@@ -14,68 +14,6 @@
                         <span class="green--text">{{ getLocaleText('LABEL_INSTRUCTION_HEADER') }}</span>
                     </Toolbar>
                 </template>
-                <template v-slot:content>
-                    <div class="subtitle-2 mb-3 mt-1">{{ getLocaleText('LABEL_INSTRUCTION') }}</div>
-                    <Input
-                        :label="getLocaleText('LABEL_NAME')"
-                        :stack="true"
-                        :onInput="(text) => inputChange('name', text)"
-                        :validateCallback="(valid) => setValidityProp('name', valid)"
-                        :value="name"
-                        :rules="[
-                            (text) => {
-                                return new RegExp(/^[a-zA-Z ]+$/gm).test(text)
-                                    ? null
-                                    : 'Name cannot include special characters';
-                            },
-                            (text) => {
-                                return text.length >= 4 ? null : 'Name must be at least 4 characters';
-                            },
-                            (text) => {
-                                return text.length <= 16 ? null : 'Name must be less than 16 characters';
-                            },
-                        ]"
-                        :placeholder="getLocaleText('LABEL_HELPER_NAME')"
-                        class="mb-3"
-                    />
-                    <Input
-                        :label="getLocaleText('LABEL_DESC')"
-                        :stack="true"
-                        :onInput="(text) => inputChange('desc', text)"
-                        :validateCallback="(valid) => setValidityProp('desc', valid)"
-                        :value="desc"
-                        :rules="[
-                            (text) => {
-                                return new RegExp(/^[a-zA-Z ]+$/gm).test(text)
-                                    ? null
-                                    : 'Name cannot include special characters';
-                            },
-                            (text) => {
-                                return text.length >= 4 ? null : 'Name must be at least 4 characters';
-                            },
-                            (text) => {
-                                return text.length <= 16 ? null : 'Name must be less than 16 characters';
-                            },
-                        ]"
-                        :placeholder="getLocaleText('LABEL_HELPER_DESC')"
-                        class="mb-3"
-                    />
-                    <div class="split split-full">
-                        <Button class="mt-2 fill-half-width" color="red" @click="togglePurchaseInterface(false)">
-                            {{ getLocaleText('LABEL_CANCEL') }}
-                        </Button>
-                        <template v-if="allValid">
-                            <Button class="ml-4 mt-2 fill-half-width" color="green" @click="purchaseComponent">
-                                {{ getLocaleText('LABEL_PURCHASE') }}
-                            </Button>
-                        </template>
-                        <template v-else>
-                            <Button class="ml-4 mt-2 fill-half-width" color="grey" :disable="true">
-                                {{ getLocaleText('LABEL_PURCHASE') }}
-                            </Button>
-                        </template>
-                    </div>
-                </template>
             </Frame>
         </Modal>
         <!-- Right Panel -->
@@ -100,7 +38,7 @@
                         <Button
                             class="smooth-button fill-full-width mr-3"
                             color="green"
-                            @click="togglePurchaseInterface(true)"
+                            @click="purchaseComponent()"
                         >
                             <span class="green--text">{{ getPurchaseText }}</span>
                         </Button>
@@ -130,11 +68,13 @@
 </template>
 
 <script lang="ts">
+import WebViewEvents from '@ViewUtility/webViewEvents';
+import { CLOTHING_INTERACTIONS } from '../shared/events';
 import { defineComponent, defineAsyncComponent } from 'vue';
 import { EXAMPLE_CLOTHING_DATA } from './utility/exampleData';
 import { DEFAULT_CLOTHING_STORE } from './utility/defaultData';
 import { LOCALE_CLOTHING } from '../shared/locales';
-import { ComponentVueInfo } from '../shared/types';
+import { IClothingStorePage } from '../shared/interfaces';
 
 const ComponentName = 'Clothing';
 export default defineComponent({
@@ -160,11 +100,9 @@ export default defineComponent({
             pageName: '',
             money: 0,
             page: {},
-            pages: [],
+            pages: [] as Array<IClothingStorePage>,
             // Old dog shit
             showDialog: false,
-            name: '',
-            desc: '',
             labels: [],
             allValid: false,
             validity: {
@@ -236,7 +174,7 @@ export default defineComponent({
                 return;
             }
 
-            alt.emit(`${ComponentName}:Populate`, JSON.stringify(this.pages));
+            WebViewEvents.emitClient(CLOTHING_INTERACTIONS.POPULATE, JSON.stringify(this.pages));
         },
         updateComponent(index: number, dataName: string, value: number, isIncrement = false) {
             const pages = [...this.pages];
@@ -285,9 +223,9 @@ export default defineComponent({
             }
 
             // Determine if we should update the labels / components based on what changed.
-            alt.emit(`${ComponentName}:Update`, JSON.stringify(this.pages), false, shouldPopulate);
+            WebViewEvents.emitClient(CLOTHING_INTERACTIONS.UPDATE, JSON.stringify(this.pages), false, shouldPopulate);
         },
-        async setPages(pages) {
+        async setPages(pages: Array<IClothingStorePage>) {
             this.pages = pages;
             this.page = this.pages[this.pageIndex];
         },
@@ -375,51 +313,54 @@ export default defineComponent({
             }
 
             return price;
+        },        
+        purchaseComponent() {
+            const pageData = JSON.parse(JSON.stringify(this.pages[this.pageIndex]));
+            delete pageData.startValue;
+            delete pageData.maxDrawables;
+            delete pageData.maxTextures;
+            delete pageData.name;
+            delete pageData.pageName;
+            delete pageData.names;
+
+            WebViewEvents.emitClient(
+                CLOTHING_INTERACTIONS.PURCHASE,
+                this.storeData.uid,
+                [pageData],
+            );
         },
         purchaseAll() {
             if (!this.pages || this.pages.length <= 0) {
                 return;
             }
 
-            const components: Array<ComponentVueInfo> = [];
+            const pages: Array<IClothingStorePage> = [];
 
             for (let i = 0; i < this.pages.length; i++) {
-                const page = this.pages[i];
+                const pageData = JSON.parse(JSON.stringify(this.pages[i]));
 
-                if (page.startValue === 'undefined' || page.startValue === null) {
+                if (pageData.startValue === 'undefined' || pageData.startValue === null) {
                     continue;
                 }
 
-                if (page.drawables[0] === page.startValue) {
+                if (pageData.drawables[0] === pageData.startValue) {
                     continue;
                 }
 
-                if (page.isProp && page.drawables[0] === -1) {
+                if (pageData.isProp && pageData.drawables[0] === -1) {
                     continue;
                 }
 
-                const componentData = JSON.parse(JSON.stringify(page));
-                delete componentData.startValue;
-                delete componentData.maxDrawables;
-                delete componentData.maxTextures;
-                delete componentData.name;
-                delete componentData.pageName;
-                delete componentData.names;
-
-                components.push({
-                    uid: this.storeData.uid,
-                    index: i,
-                    componentData,
-                    pageName: page.pageName,
-                    name: '',
-                });
+                delete pageData.startValue;
+                delete pageData.maxDrawables;
+                delete pageData.maxTextures;
+                delete pageData.name;
+                delete pageData.pageName;
+                delete pageData.names;
+                pages.push(pageData);
             }
 
-            if (!('alt' in window)) {
-                return;
-            }
-
-            alt.emit(`${ComponentName}:PurchaseAll`, components);
+            WebViewEvents.emitClient(CLOTHING_INTERACTIONS.PURCHASE, this.storeData.uid, pages);
         },
         isComponentAvailableAll() {
             let allAvailable = true;
@@ -512,16 +453,6 @@ export default defineComponent({
 
             this.allValid = allValid;
         },
-        togglePurchaseInterface(value: boolean) {
-            this.showDialog = value;
-
-            this.name = '';
-            this.desc = '';
-
-            if ('alt' in window) {
-                alt.emit(`${ComponentName}:DisableControls`, value);
-            }
-        },
         getData(dataName: string, index: number) {
             return this.pages[this.pageIndex][dataName][index];
         },
@@ -530,7 +461,7 @@ export default defineComponent({
                 return;
             }
 
-            alt.emit(`${ComponentName}:PageUpdate`, this.pageIndex);
+            WebViewEvents.emitClient(CLOTHING_INTERACTIONS.PAGE_UPDATE, this.pageIndex);
         },
         handlePress(e) {
             if (e.keyCode !== 27) {
@@ -544,31 +475,7 @@ export default defineComponent({
                 return;
             }
 
-            alt.emit(`${ComponentName}:Close`);
-        },
-        purchaseComponent() {
-            const componentData = JSON.parse(JSON.stringify(this.pages[this.pageIndex]));
-            delete componentData.startValue;
-            delete componentData.maxDrawables;
-            delete componentData.maxTextures;
-            delete componentData.name;
-            delete componentData.pageName;
-            delete componentData.names;
-
-            if (!('alt' in window)) {
-                this.togglePurchaseInterface(false);
-                return;
-            }
-
-            alt.emit(
-                `${ComponentName}:Purchase`,
-                this.storeData.uid,
-                this.pageIndex,
-                componentData,
-                this.name,
-                this.desc,
-            );
-            this.togglePurchaseInterface(false);
+            WebViewEvents.emitClose();
         },
         setData(data) {
             this.storeData = data;
@@ -598,13 +505,13 @@ export default defineComponent({
         this.setPage(this.pageIndex);
 
         if ('alt' in window) {
-            alt.on(`${ComponentName}:SetData`, this.setData);
-            alt.on(`${ComponentName}:Propagate`, this.setPages);
-            alt.on(`${ComponentName}:SetBankData`, this.setBankData);
-            alt.emit(`${ComponentName}:Ready`);
+            WebViewEvents.on(CLOTHING_INTERACTIONS.SET_DATA, this.setData);
+            WebViewEvents.on(CLOTHING_INTERACTIONS.PROPAGATE, this.setPages);
+            WebViewEvents.on(CLOTHING_INTERACTIONS.SET_BANK_DATA, this.setBankData);
+            WebViewEvents.emitReady(ComponentName);
 
             setTimeout(() => {
-                alt.emit(`${ComponentName}:Populate`, JSON.stringify(this.pages));
+                WebViewEvents.emitClient(CLOTHING_INTERACTIONS.POPULATE, JSON.stringify(this.pages));
             }, 200);
         } else {
             this.money = 500000;
@@ -612,12 +519,6 @@ export default defineComponent({
     },
     unmounted() {
         document.removeEventListener('keyup', this.handlePress);
-
-        if ('alt' in window) {
-            alt.off(`${ComponentName}:SetData`, this.setData);
-            alt.off(`${ComponentName}:Propagate`, this.setPages);
-            alt.off(`${ComponentName}:SetBankData`, this.setBankData);
-        }
     },
 });
 </script>

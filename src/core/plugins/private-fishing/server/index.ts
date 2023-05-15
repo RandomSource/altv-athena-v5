@@ -16,7 +16,7 @@ async function init() {
     Athena.player.events.on('item-equipped', equip);
     Athena.player.events.on('item-unequipped', unequip);
     Athena.player.events.on('selected-character', checkToEquip);
-    Athena.systems.inventory.events.on('onDrop', checkToUnequip);
+    //Athena.player.events.on('onDrop', checkToUnequip);
     alt.onClient(FishingEvents.fromClient.try, tryFishing);
 }
 

@@ -2,7 +2,7 @@ import * as alt from 'alt-server';
 import * as Athena from '@AthenaServer/api';
 import { LOCALE_KEYS } from '@AthenaShared/locale/languages/keys';
 import { LocaleController } from '@AthenaShared/locale/locale';
-import { WORLD_WEATHER } from '@AthenaPlugins/core-weather/shared/weather';
+import { WORLD_WEATHER } from '../../../shared/weather';
 import { World } from '../world';
 
 export class WeatherCommands {

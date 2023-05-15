@@ -10,7 +10,7 @@ import * as Athena from '@AthenaServer/api';
 import { LOCALE_KEYS } from '@AthenaShared/locale/languages/keys';
 import { FactionPlayerFuncs } from './playerFuncs';
 import { LocaleController } from '@AthenaShared/locale/locale';
-import { FACTION_EVENTS } from '@AthenaPlugins/athena-plugin-factions/shared/factionEvents';
+import { FACTION_EVENTS } from '@AthenaPlugins/plugin-factions/shared/factionEvents';
 import { InventoryView } from '@AthenaPlugins/core-inventory/server/src/view';
 
 export const FACTION_COLLECTION = 'factions';

@@ -1,9 +1,9 @@
 import * as alt from 'alt-server';
 import * as Athena from '@AthenaServer/api';
 import { CurrencyTypes } from '../../../../shared/enums/currency';
-import { FactionFuncs } from '../../../athena-plugin-factions/server/src/funcs';
-import { FactionHandler } from '../../../athena-plugin-factions/server/src/handler';
-import { FactionPlayerFuncs } from '../../../athena-plugin-factions/server/src/playerFuncs';
+import { FactionFuncs } from '../../../plugin-factions/server/src/funcs';
+import { FactionHandler } from '../../../plugin-factions/server/src/handler';
+import { FactionPlayerFuncs } from '../../../plugin-factions/server/src/playerFuncs';
 import { F_PAYCHECK_EVENTS } from '../../shared/events';
 import { FactionCharacter, FactionRank } from '../../shared/extensions';
 

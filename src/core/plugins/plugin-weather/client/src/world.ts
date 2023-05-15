@@ -1,7 +1,7 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import { WEATHER_EVENTS } from '@AthenaPlugins/core-weather/shared/events';
-import { WORLD_WEATHER } from '@AthenaPlugins/core-weather/shared/weather';
+import { WEATHER_EVENTS } from '../../shared/events';
+import { WORLD_WEATHER } from '../../shared/weather';
 
 let isTransitioning = false;
 let isFrozen = false;

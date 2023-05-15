@@ -6,7 +6,6 @@ import { FactionHandler } from './handler';
 import { Faction, FactionCharacter, FactionRank, RankPermissions } from '../../shared/interfaces';
 import { FACTION_EVENTS } from '../../shared/factionEvents';
 import * as Athena from '@AthenaServer/api';
-import { IVehicle } from '@AthenaPlugins/gp-items-tuning/server/src/prototypes';
 import { storage } from '@AthenaServer/systems';
 import { player } from '@AthenaServer/api';
 import { OwnedVehicle } from '@AthenaShared/interfaces/vehicleOwned';

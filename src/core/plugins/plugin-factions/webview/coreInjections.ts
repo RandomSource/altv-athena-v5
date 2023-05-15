@@ -5,21 +5,19 @@ import { defineAsyncComponent } from 'vue';
 export const FactionCorePageInjections = {
     actions: {
         BankPaychecks: defineAsyncComponent(
-            () => import('../../athena-plugin-factions-paychecks/components/BankPaychecks.vue'),
+            () => import('../../plugin-factions-paychecks/components/BankPaychecks.vue'),
         ),
         //DefaultActions: defineAsyncComponent(() => import('../../gp-factions-defaults/components/DefaultActions.vue')),
     },
     bank: {
         BankPaychecks: defineAsyncComponent(
-            () => import('../../athena-plugin-factions-paychecks/components/BankPaychecks.vue'),
+            () => import('../../plugin-factions-paychecks/components/BankPaychecks.vue'),
         ),
     },
     members: {},
     rankings: {},
     settings: {
-        Paychecks: defineAsyncComponent(
-            () => import('../../athena-plugin-factions-paychecks/components/Paychecks.vue'),
-        ),
+        Paychecks: defineAsyncComponent(() => import('../../plugin-factions-paychecks/components/Paychecks.vue')),
         /*DefaultSettings: defineAsyncComponent(
             () => import('../../gp-factions-defaults/components/DefaultSettings.vue'),
         ),*/

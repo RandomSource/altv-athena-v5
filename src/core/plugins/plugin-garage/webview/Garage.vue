@@ -12,7 +12,7 @@
                             <div class="preview">
                                 <!-- Vehicle Image -->
                                 <!-- old way -->
-                                <img :src="ResolvePath(`@plugins/images/athena-plugin-garage/${vehicle.model}.png`)" />
+                                <img :src="ResolvePath(`@plugins/images/plugin-garage/${vehicle.model}.png`)" />
                                 <!-- new way -->
                                 <!-- <img :src="/plugins/${vehicle.model}.png" /> -->
                                 <!-- <img :src="ResolvePath(`../../assets/vehicles/${vehicle.model}.png`)" /> -->

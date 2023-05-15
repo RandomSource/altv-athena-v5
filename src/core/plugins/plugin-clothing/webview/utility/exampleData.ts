@@ -1,6 +1,6 @@
 import { LOCALE_CLOTHING } from '../../shared/locales';
 import { CLOTHING_STORE_PAGE } from '../../shared/enums';
-import { IClothingStorePage } from '@AthenaPlugins/athena-plugin-clothing/shared/interfaces';
+import { IClothingStorePage } from '@AthenaPlugins/plugin-clothing/shared/interfaces';
 
 export const EXAMPLE_CLOTHING_DATA: IClothingStorePage[] = [
     {

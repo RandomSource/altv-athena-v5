@@ -46,8 +46,8 @@
 <script lang="ts">
 import { defineComponent, defineAsyncComponent } from 'vue';
 import { Vector3 } from '../../gp-athena-utils/shared/interfaces/vector';
-import { Faction } from '../../athena-plugin-factions/shared/interfaces';
-import { FactionParser } from '../../athena-plugin-factions/webview/utility/factionParser';
+import { Faction } from '../../plugin-factions/shared/interfaces';
+import { FactionParser } from '../../plugin-factions/webview/utility/factionParser';
 import { F_PAYCHECK_VIEW_EVENTS } from '../shared/events';
 import { FactionRank } from '../shared/extensions';
 

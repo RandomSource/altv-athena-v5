@@ -16,13 +16,13 @@ cd src/core/plugins
 **SSH**
 
 ```
-git clone git@github.com:Athena-Framework-V5/athena-plugin-food-water.git
+git clone git@github.com:Athena-Framework-V5/plugin-food-water.git
 ```
 
 **HTTPS**
 
 ```
-git clone https://github.com/Athena-Framework-V5/athena-plugin-food-water.git
+git clone https://github.com/Athena-Framework-V5/plugin-food-water.git
 ```
 
 4. Start the Server

@@ -18,12 +18,13 @@ cd src/core/plugins
 **SSH**
 
 ```
-git clone git@github.com:Stuyk/athena-plugin-clothing.git
+git clone git@github.com:Stuyk/plugin-clothing.git
 ```
 
 **HTTPS**
+
 ```
-git clone https://github.com/Stuyk/athena-plugin-clothing
+git clone https://github.com/Stuyk/plugin-clothing
 ```
 
 4. Start the Server

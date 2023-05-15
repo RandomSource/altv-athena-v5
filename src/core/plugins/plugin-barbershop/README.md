@@ -16,13 +16,13 @@ cd src/core/plugins
 **SSH**
 
 ```
-git clone git@github.com:Stuyk/athena-plugin-barbershop.git
+git clone git@github.com:Stuyk/plugin-barbershop.git
 ```
 
 **HTTPS**
 
 ```
-git clone https://github.com/Stuyk/athena-plugin-barbershop
+git clone https://github.com/Stuyk/plugin-barbershop
 ```
 
 4. Start the Server

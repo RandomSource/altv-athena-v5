@@ -5,6 +5,7 @@ import { LocaleController } from '@AthenaShared/locale/locale';
 import { VehicleState } from '@AthenaShared/interfaces/vehicleState';
 import IVehicleTuning from '@AthenaShared/interfaces/vehicleTuning';
 import IVehicleMod from '@AthenaShared/interfaces/vehicleMod';
+import VehicleExtra from '@AthenaShared/interfaces/vehicleExtra';
 
 Athena.systems.messenger.commands.register(
     'tempvehicle',
@@ -57,7 +58,7 @@ Athena.systems.messenger.commands.register(
             return;
         }
 
-        if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4) {
+        if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4 && !player.vehicle) {
             Athena.player.emit.message(player, 'No vehicle in range.');
             return;
         }
@@ -90,7 +91,7 @@ Athena.systems.messenger.commands.register(
     setLivery,
 );
 
-function setLivery(player: alt.Player, livery: number) {
+function setLivery(player: alt.Player, livery: string) {
     const vehicle = player.vehicle ? player.vehicle : Athena.utility.closest.getClosestVehicle(player.pos);
 
     if (!vehicle) {
@@ -98,7 +99,7 @@ function setLivery(player: alt.Player, livery: number) {
         return;
     }
 
-    if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4) {
+    if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4 && !player.vehicle) {
         Athena.player.emit.message(player, 'No vehicle in range.');
         return;
     }
@@ -112,7 +113,12 @@ function setLivery(player: alt.Player, livery: number) {
         return;
     }
 
-    Athena.vehicle.tuning.applyTuning(vehicle, { mods: [{ id: 48, value: livery }] });
+    if (isNaN(parseInt(livery))) {
+        Athena.player.emit.message(player, `Livery passed was not a number.`);
+        return;
+    }
+
+    Athena.vehicle.tuning.applyTuning(vehicle, { mods: [{ id: 48, value: parseInt(livery) }] });
     Athena.vehicle.controls.updateLastUsed(vehicle);
     Athena.vehicle.controls.update(vehicle);
 
@@ -141,7 +147,7 @@ Athena.systems.messenger.commands.register(
     setVehicleDirtlevel,
 );
 
-function setVehicleDirtlevel(player: alt.Player, dirtLevel: number) {
+function setVehicleDirtlevel(player: alt.Player, dirtLevel: string) {
     const vehicle = player.vehicle ? player.vehicle : Athena.utility.closest.getClosestVehicle(player.pos);
 
     if (!vehicle) {
@@ -149,12 +155,17 @@ function setVehicleDirtlevel(player: alt.Player, dirtLevel: number) {
         return;
     }
 
-    if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4) {
+    if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4 && !player.vehicle) {
         Athena.player.emit.message(player, 'No vehicle in range.');
         return;
     }
 
-    const dirtlevelState: Partial<VehicleState> = { dirtLevel };
+    if (isNaN(parseInt(dirtLevel))) {
+        Athena.player.emit.message(player, `Dirt level passed was not a number.`);
+        return;
+    }
+
+    const dirtlevelState: Partial<VehicleState> = { dirtLevel: parseInt(dirtLevel) };
 
     Athena.vehicle.tuning.applyState(vehicle, dirtlevelState);
     Athena.vehicle.controls.updateLastUsed(vehicle);
@@ -198,7 +209,7 @@ Athena.systems.messenger.commands.register(
             return;
         }
 
-        if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4) {
+        if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4 && !player.vehicle) {
             Athena.player.emit.message(player, 'No vehicle in range.');
             return;
         }
@@ -229,6 +240,129 @@ Athena.systems.messenger.commands.register(
         const tuningData: IVehicleTuning = Athena.vehicle.tuning.getTuning(vehicle);
 
         Athena.document.vehicle.set(vehicle, 'tuning', tuningData);
+    },
+);
+
+Athena.systems.messenger.commands.register(
+    'tunevehicle',
+    '/tunevehicle [modID] [value] - Sets the specified Mod to the given value',
+    ['admin'],
+    (player: alt.Player, id: string, value: string) => {
+        const vehicle = player.vehicle ? player.vehicle : Athena.utility.closest.getClosestVehicle(player.pos);
+
+        if (!vehicle) {
+            Athena.player.emit.message(player, 'No spawned vehicle.');
+            return;
+        }
+
+        if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4 && !player.vehicle) {
+            Athena.player.emit.message(player, 'No vehicle in range.');
+            return;
+        }
+
+        if (vehicle.modKit == 0 && vehicle.modKitsCount > 0) {
+            Athena.vehicle.tuning.applyTuning(vehicle, { modkit: 1 });
+        }
+
+        if (vehicle.modKit == 0) {
+            Athena.player.emit.message(player, LocaleController.get(LOCALE_KEYS.VEHICLE_HAS_NO_MOD_KIT));
+            return;
+        }
+
+        if (isNaN(parseInt(id)) || isNaN(parseInt(value))) {
+            Athena.player.emit.message(player, `Id, or value was not a number.`);
+            return;
+        }
+
+        Athena.vehicle.tuning.applyTuning(vehicle, { mods: [{ id: parseInt(id), value: parseInt(value) }] });
+        Athena.vehicle.controls.updateLastUsed(vehicle);
+        Athena.vehicle.controls.update(vehicle);
+
+        const tuningData: IVehicleTuning = Athena.vehicle.tuning.getTuning(vehicle);
+
+        Athena.document.vehicle.set(vehicle, 'tuning', tuningData);
+
+        const hash = typeof vehicle.model === 'number' ? vehicle.model : alt.hash(vehicle.model);
+
+        let vehInfo = Athena.utility.hashLookup.vehicle.hash(hash);
+
+        Athena.player.emit.message(player, `Mod ID: ${id} of ${vehInfo.displayName} was set to ${value}.`);
+    },
+);
+
+Athena.systems.messenger.commands.register(
+    'activateExtra',
+    '/activateExtra [id]',
+    ['admin'],
+    (player: alt.Player, id: string) => {
+        const vehicle = player.vehicle ? player.vehicle : Athena.utility.closest.getClosestVehicle(player.pos);
+
+        if (!vehicle) {
+            Athena.player.emit.message(player, 'No spawned vehicle.');
+            return;
+        }
+
+        if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4 && !player.vehicle) {
+            Athena.player.emit.message(player, 'No vehicle in range.');
+            return;
+        }
+
+        if (isNaN(parseInt(id))) {
+            Athena.player.emit.message(player, `Dirt level passed was not a number.`);
+            return;
+        }
+
+        Athena.vehicle.tuning.setExtra(vehicle, [{ id: parseInt(id), state: true }]);
+        Athena.vehicle.controls.updateLastUsed(vehicle);
+        Athena.vehicle.controls.update(vehicle);
+
+        const extraData: Array<VehicleExtra> = Athena.vehicle.tuning.getExtras(vehicle);
+
+        Athena.document.vehicle.set(vehicle, 'extras', extraData);
+
+        const hash = typeof vehicle.model === 'number' ? vehicle.model : alt.hash(vehicle.model);
+
+        let vehInfo = Athena.utility.hashLookup.vehicle.hash(hash);
+
+        Athena.player.emit.message(player, `Extra ${id} of ${vehInfo.displayName} was activated.`);
+    },
+);
+
+Athena.systems.messenger.commands.register(
+    'deactivateExtra',
+    '/deactivateExtra [id]',
+    ['admin'],
+    (player: alt.Player, id: string) => {
+        const vehicle = player.vehicle ? player.vehicle : Athena.utility.closest.getClosestVehicle(player.pos);
+
+        if (!vehicle) {
+            Athena.player.emit.message(player, 'No spawned vehicle.');
+            return;
+        }
+
+        if (Athena.utility.vector.distance(player.pos, vehicle.pos) > 4 && !player.vehicle) {
+            Athena.player.emit.message(player, 'No vehicle in range.');
+            return;
+        }
+
+        if (isNaN(parseInt(id))) {
+            Athena.player.emit.message(player, `Dirt level passed was not a number.`);
+            return;
+        }
+
+        Athena.vehicle.tuning.setExtra(vehicle, [{ id: parseInt(id), state: false }]);
+        Athena.vehicle.controls.updateLastUsed(vehicle);
+        Athena.vehicle.controls.update(vehicle);
+
+        const extraData: Array<VehicleExtra> = Athena.vehicle.tuning.getExtras(vehicle);
+
+        Athena.document.vehicle.set(vehicle, 'extras', extraData);
+
+        const hash = typeof vehicle.model === 'number' ? vehicle.model : alt.hash(vehicle.model);
+
+        let vehInfo = Athena.utility.hashLookup.vehicle.hash(hash);
+
+        Athena.player.emit.message(player, `Extra ${id} of ${vehInfo.displayName} was deactivated.`);
     },
 );
 

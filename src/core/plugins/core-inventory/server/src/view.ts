@@ -318,30 +318,14 @@ const Internal = {
 
         // Check Storage Capacity
         const config = Athena.systems.inventory.config.get();
-        const maxWeight = openStoragesWeight[player.id];
-        let itemsToCheck: Array<StoredItem>;
 
-        if (info.startType === 'custom' && config.weight.enabled) {
-            itemsToCheck = complexSwap.from;
-
-            if ((Athena.systems.inventory.weight.isWeightExceeded([complexSwap.to]), config.weight.player)) {
+        if (config.weight.enabled) {
+            const storageWeight = openStoragesWeight[player.id];
+            const maxWeight = info.endType === 'custom' ? storageWeight : config.weight.player;
+            if (Athena.systems.inventory.weight.isWeightExceeded([complexSwap.to], maxWeight)) {
                 InventoryView.storage.resync(player);
                 return;
             }
-        }
-
-        if (info.endType === 'custom' && config.weight.enabled) {
-            itemsToCheck = complexSwap.to;
-            if ((Athena.systems.inventory.weight.isWeightExceeded([complexSwap.from]), config.weight.player)) {
-                InventoryView.storage.resync(player);
-                return;
-            }
-        }
-
-        const isWeightExceeded = Athena.systems.inventory.weight.isWeightExceeded([itemsToCheck], maxWeight);
-        if (isWeightExceeded) {
-            InventoryView.storage.resync(player);
-            return;
         }
 
         // Assign Data

@@ -33,6 +33,41 @@
 - state.getCharacterData
 - state.getCharacterPermissions
 
+- Athena.vehicle.tuning.getMods
+- Athena.vehicle.tuning.applyMods
+
+Overrides -> src/core/client/cameras/cinematic
+Overrides -> src/core/client/cameras/gameplay
+Overrides -> src/core/client/cameras/pedEdit
+Overrides -> src/core/client/cameras/switch
+Overrides -> src/core/client/rmlui/commands/index
+Overrides -> src/core/client/menus/npc
+Overrides -> src/core/client/menus/object
+Overrides -> src/core/client/menus/player
+Overrides -> src/core/client/menus/vehicle
+
+Athena.systems.inventory.convert.toBaseItem
+Athena.systems.inventory.convert.toItem
+Athena.systems.inventory.convert.toStoredItem
+
+Fix Various Weight Related Bugs
+Fix commands using non-string types
+
+Fix Escape on Menu Close for RMLUI Menu
+
+Athena.systems.inventory.factory.getBaseItemsAsync
+Athena.systems.inventory.factory.getBaseItems
+
+AthenaClient.systems.playerConfig.get('account-data') : Returns Filtered Account Data
+AthenaClient.systems.playerConfig.get('character-data') : Returns Character Data
+
+Athena.systems.rpc.invoke
+AthenaClient.systems.rpc.on
+
+Fix Vehicle Checks for Jobs
+
+Storage System Overrides
+
 --------------------------------------
 --- Everything Below is Before April 2
 --------------------------------------

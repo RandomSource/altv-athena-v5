@@ -2,7 +2,7 @@ import { IVitalData } from './../../../../gorl-vitals/shared/vital';
 import alt from 'alt-server';
 import * as Athena from '@AthenaServer/api';
 
-Athena.systems.messenger.commands.register(
+Athena.commands.register(
     'additem',
     '/additem [dbName] [amount] [version?]',
     ['admin'],
@@ -48,7 +48,7 @@ Athena.systems.messenger.commands.register(
     },
 );
 
-Athena.systems.messenger.commands.register(
+Athena.commands.register(
     'removeitem',
     '/removeitem [dbName] [amount] [version?]',
     ['admin'],

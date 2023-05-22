@@ -92,7 +92,7 @@ export async function tryFishing(player: alt.Player) {
 
     if (fishingInfo.phase >= 1 && fishingInfo.phase <= 3) {
         if (fishingInfo.phase === 1) {
-            Athena.player.emit.notification(player, 'Press "E" again when the circle is at its smallest.');
+            Athena.player.emit.notification(player, 'Drücke erneut "E", wenn der Kreis am kleinsten ist.');
         }
 
         player.emit(FishingEvents.toClient.next, fishingInfo.times[fishingInfo.phase - 1]);
@@ -126,7 +126,7 @@ export async function tryFishing(player: alt.Player) {
 
     const didAdd = await Athena.player.inventory.add(player, { ...itemDrop, data: {} });
     if (!didAdd) {
-        Athena.player.emit.notification(player, `Inventory is full or weight exceeded...`);
+        Athena.player.emit.notification(player, `Das Inventar ist voll oder das Gewicht ist überschritten...`);
         return;
     }
 

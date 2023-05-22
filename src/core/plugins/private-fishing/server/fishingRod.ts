@@ -28,7 +28,7 @@ export function equip(player: alt.Player, slot: number, type: 'inventory' | 'too
 
     uid = Athena.player.emit.objectAttach(player, item.data);
     Athena.session.player.set(player, SessionKey, uid);
-    Athena.player.emit.notification(player, 'Press "E" to Begin Fishing');
+    Athena.player.emit.notification(player, 'Drücke "E", um mit dem Angeln zu beginnen');
     player.emit(FishingEvents.toClient.start);
 }
 

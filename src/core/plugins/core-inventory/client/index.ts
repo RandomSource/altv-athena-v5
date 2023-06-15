@@ -22,6 +22,9 @@ let isOpen = false;
 let ped: number;
 let previousHudColor: alt.RGBA;
 
+let storageboxWidth;
+let storageboxHeight;
+let storageboxSlots;
 function onUpdate(_inventory: Array<Item>, _toolbar: Array<Item>, _totalWeight: number) {
     inventory = _inventory;
     toolbar = _toolbar;
@@ -53,7 +56,6 @@ function onInventoryWeightStateChange(value: boolean) {
 
     AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_WEIGHT_STATE, isWeightEnabled);
 }
-
 function onInventoryMaxWeightChange(value: number) {
     maxWeight = value;
 
@@ -62,6 +64,38 @@ function onInventoryMaxWeightChange(value: number) {
     }
 
     AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_MAX_WEIGHT, maxWeight);
+}
+
+// Custom by GORL
+function onInventorySetStorageBoxWidth(value: number) {
+    storageboxWidth = value;
+
+    if (!isOpen) {
+        return;
+    }
+
+    AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_WITDH, value);
+}
+
+// Custom by GORL
+function onInventorySetStorageBoxHeight(value: number) {
+    storageboxHeight = value;
+
+    if (!isOpen) {
+        return;
+    }
+
+    AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_HEIGHT, value);
+}
+// Custom by GORL
+function onInventorySetStorageBoxSlots(value: number) {
+    storageboxSlots = value;
+
+    if (!isOpen) {
+        return;
+    }
+
+    AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_SLOTS, value);
 }
 
 function getClosestPlayers() {
@@ -105,6 +139,9 @@ function init() {
                 AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_WEIGHT_STATE, isWeightEnabled);
                 AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_SIZE, inventorySize);
                 AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_MAX_WEIGHT, maxWeight);
+                AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_HEIGHT, storageboxHeight); // Custom by GORL
+                AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_WITDH, storageboxWidth); // Custom by GORL
+                AthenaClient.webview.emit(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_SLOTS, storageboxSlots); // Custom by GORL
                 alt.emitServer(INVENTORY_EVENTS.TO_SERVER.OPEN);
 
                 // Draws a ped clone in-menu; but not currently working during this version of alt:V
@@ -198,6 +235,9 @@ function init() {
     AthenaClient.systems.playerConfig.addCallback('inventory-size', onInventorySizeChange);
     AthenaClient.systems.playerConfig.addCallback('inventory-weight-enabled', onInventoryWeightStateChange);
     AthenaClient.systems.playerConfig.addCallback('inventory-max-weight', onInventoryMaxWeightChange);
+    AthenaClient.systems.playerConfig.addCallback('inventory-set-storagebox-width', onInventorySetStorageBoxWidth);
+    AthenaClient.systems.playerConfig.addCallback('inventory-set-storagebox-height', onInventorySetStorageBoxHeight);
+    AthenaClient.systems.playerConfig.addCallback('inventory-set-storagebox-slots', onInventorySetStorageBoxSlots);
     AthenaClient.webview.on(INVENTORY_EVENTS.FROM_WEBVIEW.GET_CLOSEST_PLAYERS, getClosestPlayers);
 
     alt.onServer(INVENTORY_EVENTS.TO_CLIENT.OPEN, () => {

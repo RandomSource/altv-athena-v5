@@ -26,9 +26,6 @@ export default defineComponent({
             this.offclick += 1;
         },
     },
-    mounted() {
-        // Ready event is emitted inside of Grid.vue
-    },
 });
 </script>
 

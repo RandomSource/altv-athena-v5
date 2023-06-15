@@ -68,12 +68,41 @@
             </div>
             <div class="inventory-slots">
                 <Slot
+                    v-if="slotLimits.storageBox === undefined"
                     v-for="(slot, index) in slotLimits.inventory"
                     class="slot"
                     :class="getSelectedItemClass('inventory', index)"
                     :key="index"
                     :id="getID('inventory', index)"
                     :info="getSlotInfo('inventory', index)"
+                    :width="witdh"
+                    :height="height"
+                    @mouseenter="updateDescriptor('inventory', index)"
+                    @mouseleave="updateDescriptor(undefined, undefined)"
+                    @contextmenu="(e) => contextMenu(e, index)"
+                    @mousedown="
+                        (e) => drag(e, { endDrag, canBeDragged: hasItem('inventory', index), singleClick, startDrag })
+                    "
+                >
+                    <template v-slot:image v-if="hasItem('inventory', index)">
+                        <img :src="getImagePath(getItem('inventory', index))" />
+                    </template>
+                    <template v-slot:index v-else>
+                        <template v-if="config.showGridNumbers">
+                            {{ slot }}
+                        </template>
+                    </template>
+                </Slot>
+                <Slot
+                    v-if="slotLimits.storageBox != undefined"
+                    v-for="(slot, index) in slotLimits.storageBox"
+                    class="slot"
+                    :class="getSelectedItemClass('inventory', index)"
+                    :key="index"
+                    :id="getID('inventory', index)"
+                    :info="getSlotInfo('inventory', index)"
+                    :width="witdh"
+                    :height="height"
                     @mouseenter="updateDescriptor('inventory', index)"
                     @mouseleave="updateDescriptor(undefined, undefined)"
                     @contextmenu="(e) => contextMenu(e, index)"
@@ -102,14 +131,39 @@
                 </div>
             </div>
             <Context :contextTitle="context.title" :x="context.x" :y="context.y" v-if="context">
-                <div v-if="context.hasUseEffect" @click="contextAction('use')">Use</div>
+                <div v-if="context.hasUseEffect" @click="contextAction('use')">
+                    <Icon class="green--text text--lighten-1" :noSelect="true" :size="18" icon="icon-hand1"></Icon>
+                    Use
+                </div>
                 <template v-for="customAction in context.customEvents">
                     <div @click="contextAction('use', customAction.eventToCall)">{{ customAction.name }}</div>
                 </template>
-                <div @click="contextAction('split')">Split</div>
-                <div @click="contextAction('drop')">Drop</div>
-                <div @click="contextAction('give')">Give</div>
-                <div @click="contextAction('cancel')">Cancel</div>
+                <div @click="contextAction('split')">
+                    <Icon
+                        class="purple--text text--lighten-1"
+                        :noSelect="true"
+                        :size="18"
+                        icon="icon-split-arrows"
+                    ></Icon>
+                    Split
+                </div>
+                <div @click="contextAction('drop')">
+                    <Icon
+                        class="yellow--text text--lighten-1"
+                        :noSelect="true"
+                        :size="18"
+                        icon="icon-box-remove"
+                    ></Icon>
+                    Drop
+                </div>
+                <div @click="contextAction('give')">
+                    <Icon class="orange--text text--lighten-1" :noSelect="true" :size="18" icon="icon-add-user"></Icon>
+                    Give
+                </div>
+                <div @click="contextAction('cancel')">
+                    <Icon class="red--text text--lighten-1" :noSelect="true" :size="18" icon="icon-cancel"></Icon>
+                    Cancel
+                </div>
             </Context>
         </div>
     </div>
@@ -151,7 +205,10 @@ export default defineComponent({
                 inventory: 30,
                 toolbar: 5,
                 custom: 35,
+                storageBox: undefined,
             },
+            witdh: 90,
+            height: 90,
             context: undefined as
                 | {
                       x: number;
@@ -180,6 +237,27 @@ export default defineComponent({
     methods: {
         getImagePath,
         drag: makeDraggable,
+        setStorageBoxHeight(value: number) {
+            if (value === null || value < 10) {
+                return;
+            }
+            this.height = value;
+            console.log('BoxHeight' + value);
+        },
+        setStorageBoxWitdh(value: number) {
+            if (value === null || value < 10) {
+                return;
+            }
+            this.witdh = value;
+            console.log('BoxWidth' + value);
+        },
+        setStorageBoxSlots(value: number) {
+            if (value === null || value < 10) {
+                return;
+            }
+            this.slotLimits.storageBox = value;
+            console.log('BoxSlots' + value);
+        },
         updateDescriptor(type: InventoryType, index: number) {
             if (typeof type === 'undefined') {
                 this.itemName = '';
@@ -463,6 +541,9 @@ export default defineComponent({
             WebViewEvents.on(INVENTORY_EVENTS.TO_WEBVIEW.SET_SIZE, this.setSize);
             WebViewEvents.on(INVENTORY_EVENTS.TO_WEBVIEW.SET_WEIGHT_STATE, this.setWeightState);
             WebViewEvents.on(INVENTORY_EVENTS.TO_WEBVIEW.SET_MAX_WEIGHT, this.setMaxWeight);
+            WebViewEvents.on(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_HEIGHT, this.setStorageBoxHeight); //Custom
+            WebViewEvents.on(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_WITDH, this.setStorageBoxWitdh); //Custom
+            WebViewEvents.on(INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_SLOTS, this.setStorageBoxSlots); //Custom
             WebViewEvents.emitReady('Inventory');
             return;
         }

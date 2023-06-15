@@ -665,6 +665,8 @@ export const InventoryView = {
             storageSize: number,
             forceOpenInventory = false,
             maxWeight: number = Number.MAX_SAFE_INTEGER,
+            maxHeight: number = 90,
+            maxWidth: number = 90,
         ) {
             if (forceOpenInventory) {
                 player.emit(INVENTORY_EVENTS.TO_CLIENT.OPEN);
@@ -679,12 +681,22 @@ export const InventoryView = {
             if (storageSize < items.length) {
                 storageSize = items.length;
             }
-
-            openStorages[player.id] = deepCloneArray<StoredItem>(items);
+            if (typeof items === null) {
+                openStorages[player.id] = [];
+            } else {
+                openStorages[player.id] = deepCloneArray<StoredItem>(items);
+            }
             openStorageSessions[player.id] = uid;
             openStoragesWeight[player.id] = maxWeight;
             const fullStorageList = Athena.systems.inventory.manager.convertFromStored(openStorages[player.id]);
-            Athena.webview.emit(player, INVENTORY_EVENTS.TO_WEBVIEW.SET_CUSTOM, fullStorageList, storageSize);
+            Athena.webview.emit(
+                player,
+                INVENTORY_EVENTS.TO_WEBVIEW.SET_CUSTOM,
+                fullStorageList,
+                storageSize,
+                maxHeight,
+                maxWidth,
+            );
         },
         /**
          * Updates a storage session with new data.

@@ -25,6 +25,8 @@
 import { defineComponent } from 'vue';
 import { INVENTORY_CONFIG } from '../../shared/config';
 import { SlotInfo } from '../utility/slotInfo';
+import { INVENTORY_EVENTS } from '@AthenaPlugins/core-inventory/shared/events';
+import WebViewEvents from '@utility/webViewEvents';
 
 export default defineComponent({
     name: 'Slot',
@@ -53,7 +55,7 @@ export default defineComponent({
     computed: {
         getDimensions() {
             let style = '';
-
+            console.log(`Breite: ${this.width} Höhe: ${this.height}`);
             style += `min-width: ${this.width}px; max-width: ${this.width}px;`;
             style += `min-height: ${this.height}px; max-height: ${this.height}px;`;
 

@@ -28,5 +28,8 @@ export const INVENTORY_EVENTS = {
         SET_SIZE: 'inventory:event:set:size',
         SET_WEIGHT_STATE: 'inventory:event:set:weight:state',
         SET_MAX_WEIGHT: 'inventory:event:set:max:weight',
+        SET_STORAGEBOX_SLOTS: 'inventory:event:set:storagebox:slots',
+        SET_STORAGEBOX_HEIGHT: 'inventory:event:set:storagebox:height',
+        SET_STORAGEBOX_WITDH: 'inventory:event:set:storagebox:witdh',
     },
 };

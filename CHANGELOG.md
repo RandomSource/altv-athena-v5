@@ -109,6 +109,12 @@ Equip Namespace
 Athena.systems.inventory.equip.on
 Athena.systems.invnetory.equip.invoke 
 
+Basic Authentication
+- username/password based login
+- uses bip39 for recovery phrases
+
+/additem
+- added ability to fuzzy search for matching name, or dbname
 ```
 
 ## 5.0.0

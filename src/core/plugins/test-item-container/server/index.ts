@@ -1,9 +1,9 @@
-import { storage } from '@AthenaServer/systems';
 import * as alt from 'alt-server';
 import * as Athena from '@AthenaServer/api';
-import { InventoryView } from '@AthenaPlugins/core-inventory/server/src/view';
+import { InventoryView } from '@AthenaPlugins/gorl-inventory/server/src/view';
 import { ItemEx, StoredItem, StoredItemEx } from '@AthenaShared/interfaces/item';
 import IAttachable from '@AthenaShared/interfaces/iAttachable';
+
 const PLUGIN_NAME = 'Test Item Container Plugin';
 const SessionKey = 'storage-box-attachment';
 
@@ -16,7 +16,6 @@ declare global {
 }
 
 Athena.systems.plugins.registerPlugin(PLUGIN_NAME, () => {
-    alt.logError(`~lg~CORE TEST ==> ${PLUGIN_NAME} was Loaded`);
     Athena.systems.inventory.factory.upsertAsync({
         name: 'TestContainerv3',
         dbName: 'fuckstorage',
@@ -86,7 +85,7 @@ async function openStorage(player: alt.Player, uid: string, slots: number = 10) 
 
     const storedItems = await Athena.systems.storage.get(uid);
 
-    InventoryView.storage.open(player, uid, storedItems, slots, false, 10, 40, 40);
+    InventoryView.storage.open(player, uid, storedItems, slots, false, 10, 40, 90);
 }
 
 async function closeStorage(uid: string, items: Array<StoredItem>, player: alt.Player) {

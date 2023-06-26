@@ -13,7 +13,7 @@ export const ComponentName = 'Inventory';
 export default defineComponent({
     name: ComponentName,
     components: {
-        Icon: defineAsyncComponent(() => import('@components/Icon.vue')),
+        Icon: defineAsyncComponent(() => import('@VueComponents/Icon.vue')),
         Grid: defineAsyncComponent(() => import('./components/Grid.vue')),
     },
     data() {

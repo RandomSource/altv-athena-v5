@@ -1,11 +1,11 @@
 import * as alt from 'alt-server';
 
 import * as Athena from '@AthenaServer/api';
-import { INVENTORY_EVENTS } from '@AthenaPlugins/core-inventory/shared/events';
-import { DualSlotInfo, InventoryType } from '@AthenaPlugins/core-inventory/shared/interfaces';
+import { INVENTORY_EVENTS } from '@AthenaPlugins/gorl-inventory/shared/events';
+import { DualSlotInfo, InventoryType } from '@AthenaPlugins/gorl-inventory/shared/interfaces';
 import { deepCloneArray, deepCloneObject } from '@AthenaShared/utility/deepCopy';
 import { ItemDrop, StoredItem } from '@AthenaShared/interfaces/item';
-import { INVENTORY_CONFIG } from '@AthenaPlugins/core-inventory/shared/config';
+import { INVENTORY_CONFIG } from '@AthenaPlugins/gorl-inventory/shared/config';
 import { ComplexSwapReturn } from '@AthenaServer/systems/inventory/manager';
 
 type PlayerCallback = (player: alt.Player) => void;
@@ -689,14 +689,10 @@ export const InventoryView = {
             openStorageSessions[player.id] = uid;
             openStoragesWeight[player.id] = maxWeight;
             const fullStorageList = Athena.systems.inventory.manager.convertFromStored(openStorages[player.id]);
-            Athena.webview.emit(
-                player,
-                INVENTORY_EVENTS.TO_WEBVIEW.SET_CUSTOM,
-                fullStorageList,
-                storageSize,
-                maxHeight,
-                maxWidth,
-            );
+            Athena.webview.emit(player, INVENTORY_EVENTS.TO_WEBVIEW.SET_CUSTOM, fullStorageList, storageSize);
+            Athena.webview.emit(player, INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_HEIGHT, maxHeight);
+            Athena.webview.emit(player, INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_WITDH, maxWidth);
+            Athena.webview.emit(player, INVENTORY_EVENTS.TO_WEBVIEW.SET_STORAGEBOX_SLOTS, storageSize);
         },
         /**
          * Updates a storage session with new data.

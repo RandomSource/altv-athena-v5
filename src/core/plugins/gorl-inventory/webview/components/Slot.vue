@@ -92,6 +92,7 @@ export default defineComponent({
     font-weight: bold;
     letter-spacing: 1px;
     overflow: hidden;
+    scrollbar-width: none;
     transition: all 0.2s ease-in-out;
     position: relative;
 }

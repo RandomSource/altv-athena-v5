@@ -1,31 +1,12 @@
 <template>
     <div class="inventory-split">
-        <div class="inventory-frame" v-if="custom && Array.isArray(custom)">
-            <div class="inventory-slots-max">
-                <Slot
-                    v-for="(slot, index) in slotLimits.custom"
-                    class="slot"
-                    :class="getSelectedItemClass('custom', index)"
-                    :key="index"
-                    :id="getID('custom', index)"
-                    :info="getSlotInfo('custom', index)"
-                    @mouseenter="updateDescriptor('custom', index)"
-                    @mouseleave="updateDescriptor(undefined, undefined)"
-                    @mousedown="
-                        (e) => drag(e, { endDrag, canBeDragged: hasItem('custom', index), singleClick, startDrag })
-                    "
-                >
-                    <template v-slot:image v-if="hasItem('custom', index)">
-                        <img :src="getImagePath(getItem('custom', index))" />
-                    </template>
-                    <template v-slot:index v-else>
-                        <template v-if="config.showGridNumbers">
-                            {{ slot }}
-                        </template>
-                    </template>
-                </Slot>
-            </div>
-        </div>
+        <StorageBox
+            v-if="custom"
+            :custom="custom"
+            :maxWidth="maxWidth"
+            :maxHeight="maxHeight"
+            :maxSlots="slotLimits.storageBox"
+        />
         <div class="spacer">&nbsp;</div>
         <div class="inventory-frame">
             <Split
@@ -75,8 +56,8 @@
                     :key="index"
                     :id="getID('inventory', index)"
                     :info="getSlotInfo('inventory', index)"
-                    :width="witdh"
-                    :height="height"
+                    :width="maxWidth"
+                    :height="maxHeight"
                     @mouseenter="updateDescriptor('inventory', index)"
                     @mouseleave="updateDescriptor(undefined, undefined)"
                     @contextmenu="(e) => contextMenu(e, index)"
@@ -101,8 +82,8 @@
                     :key="index"
                     :id="getID('inventory', index)"
                     :info="getSlotInfo('inventory', index)"
-                    :width="witdh"
-                    :height="height"
+                    :width="maxWidth"
+                    :height="maxHeight"
                     @mouseenter="updateDescriptor('inventory', index)"
                     @mouseleave="updateDescriptor(undefined, undefined)"
                     @contextmenu="(e) => contextMenu(e, index)"
@@ -178,7 +159,7 @@ import { INVENTORY_EVENTS } from '../../shared/events';
 import { getImagePath } from '../utility/inventoryIcon';
 import { INVENTORY_CONFIG } from '../../shared/config';
 import { debounceReady } from '../utility/debounce';
-import { DualSlotInfo, InventoryType } from '@AthenaPlugins/core-inventory/shared/interfaces';
+import { DualSlotInfo, InventoryType } from '../../shared/interfaces';
 import { SlotInfo } from '../utility/slotInfo';
 
 export default defineComponent({
@@ -189,6 +170,7 @@ export default defineComponent({
         Give: defineAsyncComponent(() => import('./Give.vue')),
         Context: defineAsyncComponent(() => import('./ContextCustom.vue')),
         Icon: defineAsyncComponent(() => import('@ViewComponents/Icon.vue')),
+        StorageBox: defineAsyncComponent(() => import('./StorageBox.vue')),
     },
     props: {
         offclick: {
@@ -207,8 +189,8 @@ export default defineComponent({
                 custom: 35,
                 storageBox: undefined,
             },
-            witdh: 90,
-            height: 90,
+            maxHeight: 90,
+            maxWidth: 90,
             context: undefined as
                 | {
                       x: number;
@@ -241,14 +223,14 @@ export default defineComponent({
             if (value === null || value < 10) {
                 return;
             }
-            this.height = value;
+            this.maxHeight = value;
             console.log('BoxHeight' + value);
         },
         setStorageBoxWitdh(value: number) {
             if (value === null || value < 10) {
                 return;
             }
-            this.witdh = value;
+            this.maxWidth = value;
             console.log('BoxWidth' + value);
         },
         setStorageBoxSlots(value: number) {

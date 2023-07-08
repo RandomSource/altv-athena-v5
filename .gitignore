@@ -50,3 +50,4 @@ resources/core/**
 resources/webviews/**
 
 typedefs.d.ts
+resources/npwd/

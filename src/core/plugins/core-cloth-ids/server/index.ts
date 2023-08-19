@@ -1,19 +1,27 @@
 import * as alt from 'alt-server';
 import * as Athena from '@AthenaServer/api';
 
-const PLUGIN_NAME = 'ClothMaxIDs';
-Athena.systems.plugins.registerPlugin(PLUGIN_NAME, () => {
-    alt.log(`~lg~CUSTOM ==> ${PLUGIN_NAME} was Loaded`);
-});
+const PLUGIN_NAME = 'ClothingMaxIDs';
 
-Athena.commands.register(
-    'mciall',
-    '/mciall - Verwende hierfür nicht deinen HauptCharakter!',
-    [],
-    (player: alt.Player) => {
-        player.emit('dev:getmaxclothid:all');
-    },
-);
+if (Athena.utility.config.isDevMode()) {
+    Athena.systems.plugins.registerPlugin(PLUGIN_NAME, () => {
+        alt.log(`~lg~[DEV] ==> ${PLUGIN_NAME} was Loaded`);
+    });
+
+    Athena.commands.register(
+        'getmaxids',
+        '/getmaxids [Cloth/Props] - Verwende hierfür nicht deinen HauptCharakter!',
+        ['admin'],
+        (player: alt.Player, type: string) => {
+            if (!type) return;
+            if (type.toLowerCase() === 'props' || type.toLowerCase() === 'cloth') {
+                player.emit(`dev:getmaxids:${type.toLowerCase()}`);
+            }
+        },
+    );
+} else {
+    alt.logError(`${PLUGIN_NAME} works only in dev mode!`);
+}
 
 /*class CharTestCommand {
      ('dlccloth', '/dlccloth [ComponentID] [Drawable] [Texture] - Add DLC Cloth as Test', PERMISSIONS.NONE)

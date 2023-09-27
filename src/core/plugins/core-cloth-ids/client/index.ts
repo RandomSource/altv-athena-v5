@@ -1,4 +1,4 @@
-import { CLOTHING_CONFIG } from '@AthenaPlugins/athena-plugin-clothing/shared/config';
+import { CLOTHING_CONFIG } from '@AthenaPlugins/core-clothing/shared/config';
 import { CLOTHING_IDS_LIST, PROP_IDS_LIST } from '../shared/enums';
 import * as alt from 'alt-client';
 import * as native from 'natives';

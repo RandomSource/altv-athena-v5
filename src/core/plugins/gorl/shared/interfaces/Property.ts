@@ -8,7 +8,7 @@ import { PropertyState } from '../enums/PropertyStates';
 import { Entity } from 'alt-client';
 
 export interface IProperty {
-    name: string;
+    _id?: string;
     street?: string;
     streetnr?: number; // HausNummer
     pos: Vector3;
@@ -18,6 +18,7 @@ export interface IProperty {
     owner: Array<IOwner>; // Liste der Besitzer & BesitzerTyp
     interior?: IInterior; // Innenraum
     dimension?: number | 0; // Dimension/ Virtuelle Welt
+    info?: string; // Info/Notiz Wissenwertes zum Property zB: Haus gesperrt weil man durch den Boden fällt
     blip?: {
         icon?: number;
         sprite?: number;
@@ -29,7 +30,7 @@ export interface IProperty {
     entityIds?: {
         // Ids der erstellen Entitys wie Marker,Colshapes,Textlabels
         blip?: number;
-        textlabel?: number;
+        textlabel?: string;
         enterColshape?: number;
         marker?: number;
     };

@@ -3,12 +3,14 @@ export const HOUSE_SETTINGS = {
         Enable: true,
         Range: 35.0,
         Color: 0,
+        ShowOwner: true,
+        Debug: false,
     },
     EnterExit: {
         UseColShape: false, // Default your need to Interact with the House realistic
         FadeEffect: true, // FadeIn & Fadeout a Black Screen while Enter/Exit the House
         WalkEffect: true, // Play a Walk Animation if u Enter/Exit a House
-        UseKeyItem: true, // You need the right Key in the Inventory/ToolBar , otherwise
+        UseKeyItem: true, // You need the right Key in the Inventory/ToolBar , otherwise it compares die OwnerDBId with the PlayerDBId
     },
     Keys: {
         Interaction: 'E',

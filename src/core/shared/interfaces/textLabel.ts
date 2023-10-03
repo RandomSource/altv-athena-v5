@@ -49,4 +49,19 @@ export interface TextLabel {
      *
      */
     isServerWide?: boolean;
+    /**
+     * Color of the TextLabel , default White
+     *
+     * @type {alt.RGBA}
+     *
+     */
+    color?: alt.RGBA;
+
+    /**
+     * Scale of the TextLabel default 0.4
+     *
+     * @type {alt.RGBA}
+     *
+     */
+    scale?: number;
 }

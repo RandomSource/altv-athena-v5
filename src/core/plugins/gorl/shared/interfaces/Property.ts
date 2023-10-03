@@ -9,8 +9,9 @@ import { Entity } from 'alt-client';
 
 export interface IProperty {
     _id?: string;
-    street?: string;
-    streetnr?: number; // HausNummer
+    name?: string;
+    streetName?: string;
+    housenr?: number; // HausNummer
     pos: Vector3;
     price?: number;
     state: PropertyState; // Status des Hauses -> Kaufbar,Verkauft,Mietbar,Locked
@@ -29,9 +30,9 @@ export interface IProperty {
     };
     entityIds?: {
         // Ids der erstellen Entitys wie Marker,Colshapes,Textlabels
-        blip?: number;
+        blip?: string;
         textlabel?: string;
-        enterColshape?: number;
-        marker?: number;
+        enterInteraction?: string;
+        marker?: string;
     };
 }

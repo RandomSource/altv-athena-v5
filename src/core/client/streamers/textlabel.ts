@@ -137,7 +137,10 @@ function handleDrawTextlabels() {
             continue;
         }
 
-        AthenaClient.screen.text.drawText3D(label.text, label.pos, 0.4, new alt.RGBA(255, 255, 255, 255));
+        //AthenaClient.screen.text.drawText3D(label.text, label.pos, 0.4, new alt.RGBA(255, 255, 255, 255));
+        const labelColor = label.color ? label.color : new alt.RGBA(255, 255, 255, 255);
+        const labelScale = label.scale ? label.scale : 0.4;
+        AthenaClient.screen.text.drawText3D(label.text, label.pos, labelScale, labelColor);
     }
 }
 

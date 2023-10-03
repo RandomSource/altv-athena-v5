@@ -1,5 +1,5 @@
 export enum OwnerType {
-    Civilian, // PrivatPerson / Bürger
-    State, // Staat
-    Company, // Firmen impliziert Fraktion etc
+    Civilian = 'Civilian', // PrivatPerson / Bürger
+    State = 'State', // Staat
+    Company = 'Company', // Firmen impliziert Fraktion etc
 }

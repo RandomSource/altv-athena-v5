@@ -1,7 +1,7 @@
 {
     "[?] A URI with authentication to connect to a MongoDB Database": "TYPE IS STRING",
     "[?] ex: mongodb://username:password@127.0.0.1:27017": "TYPE IS STRING",
-    "MONGO_URL": "mongodb://docker-cloud:27017/",
+    "MONGO_URL": "mongodb://192.168.178.209:27017/",
     "[?] Used for Framework custom Database": "TYPE IS STRING",
     "MONGO_DATABASE_NAME": "athena-dev",
     "[?] Use altv built-in reconnect?": "TYPE IS BOOLEAN",

@@ -44,7 +44,6 @@ Athena.commands.register(
 );
 
 Athena.commands.register('/delhouse', '/delhouse', ['admin'], async (player: alt.Player) => {
-    closest.getClosestPlayer
-
+    closest.getClosestPlayer;
 });
 Athena.commands.register('/freehouse', '/freehouse - desc', ['admin'], async (player: alt.Player) => {});

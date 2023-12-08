@@ -10,7 +10,11 @@
             "@utility/*": ["../src-webviews/src/utility/*"],
             "@components/*": ["../src-webviews/src/components/*"],
             "@ViewComponents/*": ["../src-webviews/src/components/*"],
-            "@ViewUtility/*": ["../src-webviews/src/utility/*"]
+            "@ViewUtility/*": ["../src-webviews/src/utility/*"],
+            "@GORLServer/*": ["core/plugins/gorl/server/*"],
+            "@GORLClient/*": ["core/plugins/gorl/client/*"],
+            "@GORLShared/*": ["core/plugins/gorl/shared/*"],
+            "@GORLViews/*": ["core/plugins/gorl/webviews/src/components/*"]
         },
         "typeRoots": ["./node_modules/@types", "./node_modules/@altv"],
         "removeComments": true,

@@ -8,7 +8,7 @@ import { PropertyState } from '../enums/PropertyStates';
 import { Entity } from 'alt-client';
 
 export interface IProperty {
-    _id?: string;
+    _id?: unknown;
     name?: string;
     streetName?: string;
     housenr?: number; // HausNummer

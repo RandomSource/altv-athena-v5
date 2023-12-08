@@ -1,11 +1,11 @@
 import * as alt from 'alt-server';
 import * as Athena from '@AthenaServer/api';
+import * as GORL from '@GORLServer/index';
 import { IHouse } from '../../shared/interfaces/House';
 import { Collections } from '@AthenaServer/database/collections';
 import { HOUSE_SETTINGS } from '@AthenaPlugins/core-housing/shared/config';
 import { PropertyState } from '@AthenaPlugins/gorl/shared/enums/PropertyStates';
 import Database from '@stuyk/ezmongodb';
-import { type } from 'os';
 
 let globalHouses: Array<IHouse> = [];
 export class HouseController {
@@ -190,8 +190,7 @@ export class HouseController {
         return count;
     }
 }
-
-alt.on('resourceStop', () => {
+GORL.systems.customStorage.alt.on('resourceStop', () => {
     globalHouses.forEach((x) => {
         if (x.entityIds.blip) {
             Athena.controllers.blip.remove(x.entityIds.blip);
